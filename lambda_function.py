@@ -3,11 +3,18 @@ import slack
 
 STATUS_OPTIONS = [
   ("", ""),
-  ("Walking", ":walking:")
+  ("Walking", ":walking:"),
+  ("Eating", ":knife_fork_plate:"),
+  ("On a video call", ":movie_camera:"),
+  ("Walking the dog", ":dog2:"),
+  ("In a meeting", ":busts_in_silhouette:"),
+  ("Please do not disturb", ":octagonal_sign:"),
+  ("On vacation", ":palm_tree:"),
+  ("Commuting", ":car:")
 ]
 
 def lambda_handler(event, context):
-  pos = 3
+  pos = 0
   if 0 <= pos < len(STATUS_OPTIONS):
     client = slack.WebClient(token=os.environ["slack_token"])
     client.users_profile_set(
