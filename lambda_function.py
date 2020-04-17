@@ -14,7 +14,7 @@ STATUS_OPTIONS = [
 ]
 
 def lambda_handler(event, context):
-  pos = 0
+  pos = event["status"]
   if 0 <= pos < len(STATUS_OPTIONS):
     client = slack.WebClient(token=os.environ["slack_token"])
     client.users_profile_set(
