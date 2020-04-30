@@ -8,6 +8,7 @@ STATUS_OPTIONS = [
   ("On a video call", ":movie_camera:"),
   ("Walking the dog", ":dog2:"),
   ("In a meeting", ":busts_in_silhouette:"),
+  ("Learning, but available", ":computer:"),
   ("Please do not disturb", ":octagonal_sign:"),
   ("On vacation", ":palm_tree:"),
   ("Commuting", ":car:")
