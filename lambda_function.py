@@ -17,13 +17,14 @@ STATUS_OPTIONS = [
 def lambda_handler(event, context):
   pos = event["status"]
   if 0 <= pos < len(STATUS_OPTIONS):
-    client = slack.WebClient(token=os.environ["slack_token"])
-    client.users_profile_set(
-      profile={
-          "status_text": STATUS_OPTIONS[pos][0],
-          "status_emoji": STATUS_OPTIONS[pos][1]
-        }
-    )
+    clients = [slack.WebClient(val) for key, val in os.environ.items() if "slack_token" in key]
+    for client in clients:
+      client.users_profile_set(
+        profile={
+            "status_text": STATUS_OPTIONS[pos][0],
+            "status_emoji": STATUS_OPTIONS[pos][1]
+          }
+      )
   else:
     raise IndexError("The requested status index is out of range.")
 
