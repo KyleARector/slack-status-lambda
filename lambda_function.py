@@ -15,8 +15,8 @@ STATUS_OPTIONS = [
 ]
 
 def lambda_handler(event, context):
-  if "status" in event:
-    if event["status"] in dict(STATUS_OPTIONS):
+  if "status" in event["data"]:
+    if event["data"]["status"] in dict(STATUS_OPTIONS):
       status = event["status"]
       clients = [slack.WebClient(val) for key, val in os.environ.items() if "slack_token" in key]
       for client in clients:
@@ -28,8 +28,8 @@ def lambda_handler(event, context):
         )
     else:
       raise KeyError("The requested status is not in the list of statuses")
-  elif "index" in event:
-    pos = event["index"]
+  elif "index" in event["data"]:
+    pos = event["data"]["index"]
     if 0 <= pos < len(STATUS_OPTIONS):
       clients = [slack.WebClient(val) for key, val in os.environ.items() if "slack_token" in key]
       for client in clients:
@@ -42,7 +42,7 @@ def lambda_handler(event, context):
     else:
       raise IndexError("The requested status index is out of range.")
   else:
-    raise BaseException("Must provide 'status' or 'index' ardument in event")
+    raise BaseException("Must provide 'status' or 'index' argument in event")
 
 
 if __name__ == "__main__":
