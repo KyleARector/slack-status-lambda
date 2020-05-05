@@ -17,13 +17,17 @@ STATUS_OPTIONS = [
 def lambda_handler(event, context):
   if "status" in event["data"]:
     if event["data"]["status"] in dict(STATUS_OPTIONS):
-      status = event["status"]
+      status = ""
+      emoji = ""
+      if event["data"]["status"] != "Clear":
+        status = event["data"]["status"]
+        emoji = dict(STATUS_OPTIONS)[status]
       clients = [slack.WebClient(val) for key, val in os.environ.items() if "slack_token" in key]
       for client in clients:
         client.users_profile_set(
           profile={
               "status_text": status,
-              "status_emoji": dict(STATUS_OPTIONS)[status]
+              "status_emoji": emoji
             }
         )
     else:
