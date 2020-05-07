@@ -11,7 +11,8 @@ STATUS_OPTIONS = [
   ("Learning, but available", ":computer:"),
   ("Please do not disturb", ":octagonal_sign:"),
   ("On vacation", ":palm_tree:"),
-  ("Commuting", ":car:")
+  ("Commuting", ":car:"),
+  ("Making tea", ":tea:")
 ]
 
 def update_slack_status(status, emoji):
