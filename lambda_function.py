@@ -3,17 +3,18 @@ import slack
 
 STATUS_OPTIONS = [
   ("", ""),
-  ("Walking", ":walking:"),
-  ("Eating", ":knife_fork_plate:"),
-  ("On a video call", ":movie_camera:"),
-  ("Making tea", ":tea:"),
-  ("Learning, but available", ":computer:"),
-  ("Please do not disturb", ":octagonal_sign:"),
-  ("Out for the day", ":rocket:"),
-  ("In a meeting", ":busts_in_silhouette:"),
-  ("Walking the dog", ":dog2:"),
-  ("Commuting", ":car:"),
-  ("On vacation", ":palm_tree:")
+  ("Walking", "walking"),
+  ("Eating", "knife_fork_plate"),
+  ("On a video call", "movie_camera"),
+  ("Available", "white_check_mark"),
+  ("Learning, but available", "computer"),
+  ("Please do not disturb", "no_entry"),
+  ("Out for the day", "rocket"),
+  ("In a meeting", "busts_in_silhouette"),
+  ("Walking the dog", "dog2"),
+  ("Making tea", "tea"),
+  ("Commuting", "car"),
+  ("On vacation", "palm_tree")
 ]
 
 def update_slack_status(status, emoji):
@@ -22,7 +23,7 @@ def update_slack_status(status, emoji):
     client.users_profile_set(
       profile={
           "status_text": status,
-          "status_emoji": emoji
+          "status_emoji": f":{emoji}:"
         }
     )
 
