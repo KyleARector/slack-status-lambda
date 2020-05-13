@@ -14,7 +14,8 @@ STATUS_OPTIONS = [
   ("Walking the dog", ":dog2:"),
   ("Making tea", ":tea:"),
   ("Commuting", ":car:"),
-  ("On vacation", ":palm_tree:")
+  ("On vacation", ":palm_tree:"),
+  ("Meditating", ":man_in_lotus_position:")
 ]
 
 def update_slack_status(status, emoji):
