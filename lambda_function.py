@@ -15,7 +15,9 @@ STATUS_OPTIONS = [
   ("Making tea", ":tea:"),
   ("Commuting", ":car:"),
   ("On vacation", ":palm_tree:"),
-  ("Meditating", ":man_in_lotus_position:")
+  ("Meditating", ":man_in_lotus_position:"),
+  ("Doing yoga", ":man_in_lotus_position:"),
+  ("Hardware hacking", ":robot_face:")
 ]
 
 def update_slack_status(status, emoji):
@@ -24,7 +26,8 @@ def update_slack_status(status, emoji):
     client.users_profile_set(
       profile={
           "status_text": status,
-          "status_emoji": emoji
+          "status_emoji": emoji,
+          "status_expiration": 0
         }
     )
 
