@@ -1,6 +1,9 @@
 name: Deploy Lambda
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   deploy:
