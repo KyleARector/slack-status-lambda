@@ -19,6 +19,7 @@ STATUS_OPTIONS = [
   ("Doing yoga", ":man_in_lotus_position:"),
   ("Hardware hacking", ":robot_face:"),
   ("Working on Hacktoberfest", ":jack_o_lantern:"),
+  ("Working on Advent of Code", ":snowflake:"),
 ]
 
 def update_slack_status(status, emoji):
