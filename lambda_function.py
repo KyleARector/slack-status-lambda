@@ -1,27 +1,6 @@
 import os
+import json
 import slack
-
-STATUS_OPTIONS = [
-  ("", ""),
-  ("Walking", ":walking:"),
-  ("Eating", ":knife_fork_plate:"),
-  ("On a video call", ":movie_camera:"),
-  ("Available", ":white_check_mark:"),
-  ("Learning, but available", ":computer:"),
-  ("Please do not disturb", ":no_entry:"),
-  ("Out for the day", ":rocket:"),
-  ("In a meeting", ":busts_in_silhouette:"),
-  ("Walking the dog", ":dog2:"),
-  ("Making tea", ":tea:"),
-  ("Commuting", ":car:"),
-  ("On vacation", ":palm_tree:"),
-  ("Meditating", ":man_in_lotus_position:"),
-  ("Doing yoga", ":man_in_lotus_position:"),
-  ("Hardware hacking", ":robot_face:"),
-  ("Working on Hacktoberfest", ":jack_o_lantern:"),
-  ("Working on Advent of Code", ":snowflake:"),
-  ("Working out", ":weight_lifter:"),
-]
 
 def update_slack_status(status, emoji):
   clients = [slack.WebClient(val) for key, val in os.environ.items() if "slack_token" in key]
@@ -35,20 +14,32 @@ def update_slack_status(status, emoji):
     )
 
 def lambda_handler(event, context):
+  status_options_str = ""
+  if os.environ.get("status_options") is not None:
+    status_options_str = os.environ["status_options"]
+  else:
+    f = open("status_options.json", "r")
+    status_options_str = f.read()
+    f.close()
+
+  status_options = json.loads(status_options_str)
+
+  print(status_options)
+
   if "status" in event["data"]:
-    if event["data"]["status"] in dict(STATUS_OPTIONS) or event["data"]["status"] == "Clear":
+    if event["data"]["status"] in dict(status_options) or event["data"]["status"] == "Clear":
       status = ""
       emoji = ""
       if event["data"]["status"] != "Clear":
         status = event["data"]["status"]
-        emoji = dict(STATUS_OPTIONS)[status]
+        emoji = dict(status_options)[status]
       update_slack_status(status, emoji)
     else:
       raise KeyError("The requested status is not in the list of statuses")
   elif "index" in event["data"]:
     pos = event["data"]["index"]
-    if 0 <= pos < len(STATUS_OPTIONS):
-      update_slack_status(STATUS_OPTIONS[pos][0], STATUS_OPTIONS[pos][1])
+    if 0 <= pos < len(status_options):
+      update_slack_status(status_options[pos][0], status_options[pos][1])
     else:
       raise IndexError("The requested status index is out of range.")
   else:
