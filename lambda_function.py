@@ -24,26 +24,18 @@ def lambda_handler(event, context):
 
   status_options = json.loads(status_options_str)
 
-  print(status_options)
-
   if "status" in event["data"]:
-    if event["data"]["status"] in dict(status_options) or event["data"]["status"] == "Clear":
+    if event["data"]["status"] in status_options or event["data"]["status"] == "Clear":
       status = ""
       emoji = ""
       if event["data"]["status"] != "Clear":
         status = event["data"]["status"]
-        emoji = dict(status_options)[status]
+        emoji = status_options[status]
       update_slack_status(status, emoji)
     else:
       raise KeyError("The requested status is not in the list of statuses")
-  elif "index" in event["data"]:
-    pos = event["data"]["index"]
-    if 0 <= pos < len(status_options):
-      update_slack_status(status_options[pos][0], status_options[pos][1])
-    else:
-      raise IndexError("The requested status index is out of range.")
   else:
-    raise BaseException("Must provide 'status' or 'index' argument in event")
+    raise BaseException("Must provide 'status' argument in event")
 
 
 if __name__ == "__main__":
