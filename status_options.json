@@ -1,0 +1,21 @@
+[
+    {"": ""},
+    {"Walking": ":walking:"},
+    {"Eating": ":knife_fork_plate:"},
+    {"On a video call": ":movie_camera:"},
+    {"Available": ":white_check_mark:"},
+    {"Learning, but available": ":computer:"},
+    {"Please do not disturb": ":no_entry:"},
+    {"Out for the day": ":rocket:"},
+    {"In a meeting": ":busts_in_silhouette:"},
+    {"Walking the dog": ":dog2:"},
+    {"Making tea": ":tea:"},
+    {"Commuting": ":car:"},
+    {"On vacation": ":palm_tree:"},
+    {"Meditating": ":man_in_lotus_position:"},
+    {"Doing yoga": ":man_in_lotus_position:"},
+    {"Hardware hacking": ":robot_face:"},
+    {"Working on Hacktoberfest": ":jack_o_lantern:"},
+    {"Working on Advent of Code": ":snowflake:"},
+    {"Working out": ":weight_lifter:"}
+]
