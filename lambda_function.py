@@ -43,18 +43,55 @@ def lambda_handler(event, context):
 
   status_options = json.loads(status_options_str)
 
-  if "status" in event["data"]:
-    if event["data"]["status"] in status_options or event["data"]["status"] == "Clear":
-      status = ""
-      emoji = ""
-      if event["data"]["status"] != "Clear":
-        status = event["data"]["status"]
-        emoji = status_options[status]
-      update_slack_status(status, emoji)
+  # Normalize incoming event shapes to extract `status` or `index`.
+  data = None
+  if isinstance(event, dict):
+    if "data" in event and isinstance(event["data"], dict):
+      data = event["data"]
+    elif "body" in event:
+      try:
+        data = json.loads(event["body"]) if isinstance(event["body"], str) else event["body"]
+      except Exception:
+        data = None
+    elif "status" in event:
+      data = {"status": event["status"]}
+    elif "queryStringParameters" in event and event["queryStringParameters"]:
+      q = event["queryStringParameters"]
+      if "status" in q:
+        data = {"status": q["status"]}
+
+  if not data:
+    raise KeyError("Must provide 'status' or 'index' in event. Supported shapes: {'data':{'status'|'index':...}}, {'status':...}, API GW with 'body' or 'queryStringParameters'}")
+
+  # Resolve requested status from explicit name or numeric index
+  requested = None
+  if "index" in data:
+    try:
+      idx = int(data["index"])
+    except Exception:
+      raise KeyError("'index' must be an integer")
+    keys = list(status_options.keys())
+    n = len(keys)
+    if 0 <= idx < n:
+      requested = keys[idx]
+    elif 1 <= idx <= n:
+      requested = keys[idx - 1]
     else:
-      raise KeyError("The requested status is not in the list of statuses")
+      raise IndexError(f"index out of range (got {idx}, valid 0..{n-1} or 1..{n})")
+  elif "status" in data:
+    requested = data["status"]
   else:
-    raise BaseException("Must provide 'status' argument in event")
+    raise KeyError("Must provide either 'status' or 'index' in event data")
+
+  if requested in status_options or requested == "Clear":
+    status = ""
+    emoji = ""
+    if requested != "Clear":
+      status = requested
+      emoji = status_options[status]
+    update_slack_status(status, emoji)
+  else:
+    raise KeyError("The requested status is not in the list of statuses")
 
 
 if __name__ == "__main__":
