@@ -1,17 +1,36 @@
 import os
 import json
-import slack
+import urllib.request
+import urllib.error
+import html
 
 def update_slack_status(status, emoji):
-  clients = [slack.WebClient(val) for key, val in os.environ.items() if "slack_token" in key]
-  for client in clients:
-    client.users_profile_set(
-      profile={
-          "status_text": status,
-          "status_emoji": emoji,
-          "status_expiration": 0
-        }
-    )
+  tokens = [val for key, val in os.environ.items() if "slack_token" in key]
+  if not tokens:
+    return
+  url = "https://slack.com/api/users.profile.set"
+  for token in tokens:
+    profile = {
+      "profile": {
+        "status_text": status,
+        "status_emoji": emoji,
+        "status_expiration": 0
+      }
+    }
+    data = json.dumps(profile).encode("utf-8")
+    headers = {
+      "Content-Type": "application/json;charset=utf-8",
+      "Authorization": f"Bearer {token}"
+    }
+    req = urllib.request.Request(url, data=data, headers=headers, method="POST")
+    try:
+      with urllib.request.urlopen(req) as resp:
+        body = resp.read().decode("utf-8")
+        resp_json = json.loads(body)
+        if not resp_json.get("ok"):
+          raise Exception(f"Slack API error: {body}")
+    except urllib.error.HTTPError as e:
+      raise
 
 def lambda_handler(event, context):
   status_options_str = ""
@@ -39,4 +58,4 @@ def lambda_handler(event, context):
 
 
 if __name__ == "__main__":
-  lambda_handler(None, None)
+  print("This module is intended to be used as AWS Lambda. Call lambda_handler(event, context) with a valid event.")
